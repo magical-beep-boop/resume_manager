@@ -22,6 +22,7 @@ It is designed for a single-user workflow where you maintain a larger bullet ban
 
 - Accepts a job URL and attempts server-side extraction of the job description
 - Falls back to manual job description paste if scraping fails
+- Accepts PDF and Word resume uploads to auto-fill the editor
 - Lets you add, edit, remove, and reorder work experiences
 - Lets you add, edit, remove, and reorder bullets under each experience
 - Lets you hide and reorder resume sections such as name, headline, contact, summary, skills, and education
@@ -38,6 +39,7 @@ This version is intentionally optimized for:
 - Single-user personal usage
 - ATS-friendly plain resume output
 - Existing-bullet selection only
+- Resume upload as a best-effort autofill step
 - LinkedIn-first workflow with manual paste fallback
 
 This version does not yet:
@@ -45,6 +47,7 @@ This version does not yet:
 - Use an LLM to rewrite bullet points
 - Support multi-user authentication
 - Persist data to a database
+- Parse legacy `.doc` files directly
 - Guarantee LinkedIn scraping for every listing
 
 ## Tech stack
@@ -52,13 +55,17 @@ This version does not yet:
 - Next.js 16 App Router
 - React 19
 - Server route for job scraping at `app/api/scrape/route.js`
+- Server route for resume upload import at `app/api/import-resume/route.js`
 - Browser local storage for profile and revision persistence
+- `mammoth` for `.docx` parsing
+- `pdf-parse` for PDF text extraction
 - Playwright for generating README screenshots
 
 ## Project structure
 
 ```text
 app/
+  api/import-resume/route.js  Resume upload parsing endpoint
   api/scrape/route.js     Server-side job description extraction
   globals.css             Application and preview styling
   layout.js               Root layout
@@ -67,10 +74,37 @@ docs/
   images/                 README screenshots
 lib/
   default-resume.js       Seed resume data
+  resume-import.js        PDF/Word resume parsing heuristics
   resume-utils.js         Keyword matching and resume generation logic
 scripts/
   take-screenshots.mjs    Regenerates README screenshots
 ```
+
+## Resume upload support
+
+The editor can auto-fill from an uploaded resume file before you tailor it for a job.
+
+### Supported formats
+
+- `.pdf`
+- `.docx`
+
+### Current `.doc` behavior
+
+- `.doc` uploads are detected, but the app currently asks the user to convert them to `.docx` or PDF first
+
+### What gets extracted
+
+- Name
+- Contact details
+- Skills
+- Education
+- Work experiences
+- Bullet points under each role
+
+### Important note
+
+Resume parsing is best-effort. Imported content should be reviewed in the editor before generating the final tailored resume.
 
 ## How resume generation works
 
@@ -123,12 +157,18 @@ This refreshes the images in `docs/images/`.
 
 ## Usage flow
 
-### 1. Provide a target job
+### 1. Import an existing resume or start manually
+
+- Upload a PDF or `.docx` resume to pre-fill the editor
+- Review the extracted sections and correct anything that needs cleanup
+- Or skip upload and fill the editor manually
+
+### 2. Provide a target job
 
 - Paste a LinkedIn job URL and try scraping
 - If scraping fails, paste the job description manually
 
-### 2. Maintain your resume content
+### 3. Maintain your resume content
 
 - Add new work experiences
 - Reorder experiences
@@ -136,7 +176,7 @@ This refreshes the images in `docs/images/`.
 - Reorder bullets within a role
 - Remove bullets or whole experiences
 
-### 3. Customize layout
+### 4. Customize layout
 
 - Reorder resume sections
 - Hide sections you do not want to show
@@ -146,7 +186,7 @@ This refreshes the images in `docs/images/`.
 - Change resume page color with presets or the custom color picker
 - Resize the editor and preview panels
 
-### 4. Generate and export
+### 5. Generate and export
 
 - Click `Generate Resume`
 - Review the one-page preview
@@ -163,6 +203,13 @@ This refreshes the images in `docs/images/`.
 - Profile data is stored in the browser using local storage.
 - Saved revisions are also stored locally in the browser.
 - Clearing browser storage will remove local app history.
+
+## Notes on resume import
+
+- PDF extraction quality depends on how text is embedded in the source file.
+- `.docx` files usually import more cleanly than PDFs.
+- Multi-column or heavily designed resumes may need some manual cleanup after import.
+- The parser is tuned to create a useful starting point, not a perfect one-click conversion for every template.
 
 ## Future improvements
 

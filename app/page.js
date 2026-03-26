@@ -84,6 +84,7 @@ export default function HomePage() {
   const [status, setStatus] = useState("Paste a job description or try scraping a LinkedIn job URL.");
   const [isGenerating, startGenerating] = useTransition();
   const [isScraping, startScraping] = useTransition();
+  const [isImporting, startImporting] = useTransition();
   const [dragState, setDragState] = useState(null);
   const [isResizingPanels, setIsResizingPanels] = useState(false);
 
@@ -343,6 +344,55 @@ export default function HomePage() {
     setStatus("Loaded a sample product analytics job description.");
   };
 
+  const importResume = (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file) {
+      return;
+    }
+
+    const isAllowed = /\.(pdf|doc|docx)$/i.test(file.name);
+    if (!isAllowed) {
+      setStatus("Only PDF and Word resume files are supported.");
+      return;
+    }
+
+    startImporting(async () => {
+      setStatus(`Importing ${file.name} and extracting resume sections.`);
+
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await fetch("/api/import-resume", {
+          method: "POST",
+          body: formData
+        });
+
+        const payload = await response.json();
+        if (!response.ok) {
+          throw new Error(payload.error || "Resume import failed.");
+        }
+
+        setState((current) => ({
+          ...current,
+          profile: {
+            ...current.profile,
+            ...payload.profile,
+            skills: payload.profile?.skills?.length ? payload.profile.skills : current.profile.skills,
+            education: payload.profile?.education?.length ? payload.profile.education : current.profile.education
+          },
+          roles: payload.roles?.length ? payload.roles : current.roles
+        }));
+        setGenerated(null);
+        setStatus("Resume imported. Review the auto-filled sections and adjust anything that needs cleanup.");
+      } catch (error) {
+        setStatus(error.message || "Resume import failed. Try a PDF or .docx version of the file.");
+      }
+    });
+  };
+
   const resetHistory = () => {
     setHistory([]);
     setStatus("Saved revisions cleared.");
@@ -409,6 +459,17 @@ export default function HomePage() {
         </div>
 
         <CollapsibleCard title="1. Job Input">
+          <label className="field">
+            <span>Import Existing Resume</span>
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"
+              onChange={importResume}
+              disabled={isImporting}
+            />
+            <small>Upload a PDF or Word resume to auto-fill the editor. Best results are with PDF or .docx files.</small>
+          </label>
+
           <label className="field">
             <span>Job URL</span>
             <input
