@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Tailor</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="panel controls">
+      <div class="panel-header">
+        <p class="eyebrow">Resume Tailor</p>
+        <h1>Build a one-page ATS resume from a job URL.</h1>
+        <p class="subtle">
+          Best-effort LinkedIn scrape, manual paste fallback, keyword matching, revision history, and PDF export.
+        </p>
+      </div>
+
+      <section class="card">
+        <h2>1. Job Input</h2>
+        <label class="field">
+          <span>Job URL</span>
+          <input id="jobUrl" type="url" placeholder="https://www.linkedin.com/jobs/view/..." />
+        </label>
+        <div class="button-row">
+          <button id="scrapeButton" type="button">Try Scrape</button>
+          <button id="sampleButton" type="button" class="secondary">Load Sample</button>
+        </div>
+        <p id="scrapeStatus" class="helper">
+          LinkedIn often blocks direct scraping. If fetch fails, paste the job description below.
+        </p>
+        <label class="field">
+          <span>Job Description</span>
+          <textarea id="jobDescription" rows="12" placeholder="Paste the full job description here if scraping does not work."></textarea>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>2. Resume Profile</h2>
+        <label class="field">
+          <span>Candidate Name</span>
+          <input id="candidateName" type="text" />
+        </label>
+        <label class="field">
+          <span>Headline</span>
+          <input id="candidateHeadline" type="text" />
+        </label>
+        <label class="field">
+          <span>Contact Line</span>
+          <input id="candidateContact" type="text" />
+        </label>
+        <label class="field">
+          <span>Skills</span>
+          <textarea id="skillsInput" rows="4" placeholder="Comma separated skills"></textarea>
+        </label>
+        <div id="experienceEditor" class="experience-editor"></div>
+        <button id="addRoleButton" type="button" class="secondary full-width">Add Experience</button>
+      </section>
+
+      <section class="card">
+        <h2>3. Generate</h2>
+        <label class="field">
+          <span>Target bullets per recent role</span>
+          <input id="bulletLimit" type="number" min="1" max="5" value="2" />
+        </label>
+        <div class="button-row">
+          <button id="generateButton" type="button">Generate Resume</button>
+          <button id="saveProfileButton" type="button" class="secondary">Save Profile</button>
+        </div>
+        <div class="button-row">
+          <button id="downloadPdfButton" type="button" class="secondary">Export PDF</button>
+          <button id="resetHistoryButton" type="button" class="ghost">Clear History</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Saved Revisions</h2>
+        <div id="historyList" class="history-list"></div>
+      </section>
+    </aside>
+
+    <main class="panel preview-panel">
+      <div class="preview-header">
+        <div>
+          <p class="eyebrow">ATS Preview</p>
+          <h2>One-page resume</h2>
+        </div>
+        <p id="matchSummary" class="subtle">Generate a resume to see selected bullets and keyword matches.</p>
+      </div>
+
+      <section id="resumePreview" class="resume-page">
+        <div class="resume-empty">
+          <h3>Your tailored resume will appear here.</h3>
+          <p>Paste a job description or try scraping a LinkedIn job URL, then generate the resume.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="roleTemplate">
+    <article class="experience-card">
+      <div class="experience-card__header">
+        <h3>Experience</h3>
+        <button type="button" class="ghost remove-role-button">Remove</button>
+      </div>
+      <div class="grid-two">
+        <label class="field">
+          <span>Company</span>
+          <input type="text" data-role-field="company" />
+        </label>
+        <label class="field">
+          <span>Title</span>
+          <input type="text" data-role-field="title" />
+        </label>
+      </div>
+      <div class="grid-two">
+        <label class="field">
+          <span>Dates</span>
+          <input type="text" data-role-field="dates" />
+        </label>
+        <label class="field">
+          <span>Location</span>
+          <input type="text" data-role-field="location" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Bullet bank</span>
+        <div class="bullet-list" data-role-bullets></div>
+      </label>
+      <button type="button" class="secondary add-bullet-button">Add Bullet</button>
+    </article>
+  </template>
+
+  <template id="bulletTemplate">
+    <div class="bullet-row">
+      <textarea rows="3" data-bullet-input></textarea>
+      <button type="button" class="ghost remove-bullet-button">Delete</button>
+    </div>
+  </template>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

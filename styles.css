@@ -1,0 +1,397 @@
+:root {
+  --bg: #f4f1ea;
+  --panel: #fffdf8;
+  --panel-strong: #fff;
+  --border: #d9d0c3;
+  --text: #1f1a17;
+  --muted: #655b52;
+  --accent: #8a4b20;
+  --accent-soft: #f1e1d2;
+  --shadow: 0 18px 50px rgba(58, 38, 21, 0.08);
+  --radius: 18px;
+  --page-width: 8.5in;
+  --page-min-height: 11in;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(138, 75, 32, 0.09), transparent 28%),
+    linear-gradient(180deg, #f6f1e8 0%, #efe8dc 100%);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:not(.secondary):not(.ghost) {
+  background: var(--accent);
+  color: #fff;
+}
+
+button.secondary {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: rgba(138, 75, 32, 0.15);
+}
+
+button.ghost {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--border);
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(360px, 460px) minmax(0, 1fr);
+  gap: 1.5rem;
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+.panel {
+  background: rgba(255, 253, 248, 0.78);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(217, 208, 195, 0.8);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.controls {
+  padding: 1.25rem;
+  overflow: auto;
+  max-height: calc(100vh - 3rem);
+}
+
+.preview-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+}
+
+.panel-header,
+.preview-header {
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  font-size: 1.95rem;
+  line-height: 1.1;
+  margin-bottom: 0.55rem;
+}
+
+h2 {
+  font-size: 1.05rem;
+  margin-bottom: 0.9rem;
+}
+
+.subtle,
+.helper {
+  color: var(--muted);
+}
+
+.card {
+  background: var(--panel-strong);
+  border: 1px solid rgba(217, 208, 195, 0.9);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.field {
+  display: block;
+  margin-bottom: 0.85rem;
+}
+
+.field span {
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: #fffefb;
+  color: var(--text);
+  border-radius: 14px;
+  padding: 0.85rem 0.95rem;
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid rgba(138, 75, 32, 0.2);
+  border-color: rgba(138, 75, 32, 0.45);
+}
+
+.button-row {
+  display: flex;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.experience-editor {
+  display: grid;
+  gap: 1rem;
+}
+
+.experience-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 0.85rem;
+  background: #fffefb;
+}
+
+.experience-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.grid-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.bullet-list {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.bullet-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.65rem;
+  align-items: start;
+}
+
+.history-list {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.history-item {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.8rem;
+  background: #fffefb;
+}
+
+.history-item h3 {
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
+}
+
+.history-item p {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-bottom: 0.65rem;
+}
+
+.resume-page {
+  width: min(100%, var(--page-width));
+  min-height: var(--page-min-height);
+  margin: 0 auto;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  padding: 0.45in 0.5in;
+  overflow: hidden;
+}
+
+.resume-empty {
+  display: grid;
+  place-items: center;
+  min-height: calc(var(--page-min-height) - 0.9in);
+  text-align: center;
+  color: #6a6a6a;
+}
+
+.resume-doc {
+  font-size: 10.5pt;
+  line-height: 1.28;
+}
+
+.resume-doc h1 {
+  margin: 0;
+  font-size: 20pt;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+}
+
+.resume-doc .headline {
+  margin: 0.12rem 0 0.25rem;
+  font-size: 11pt;
+  font-weight: 700;
+}
+
+.resume-doc .contact {
+  font-size: 9.6pt;
+  margin-bottom: 0.32rem;
+}
+
+.resume-section {
+  margin-top: 0.32rem;
+}
+
+.resume-section__title {
+  display: block;
+  border-top: 1px solid #222;
+  padding-top: 0.12rem;
+  margin-bottom: 0.12rem;
+  font-weight: 700;
+  font-size: 10pt;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.resume-summary {
+  margin: 0 0 0.12rem;
+}
+
+.resume-role {
+  margin-bottom: 0.18rem;
+}
+
+.resume-role__heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  font-weight: 700;
+}
+
+.resume-role__meta {
+  font-style: italic;
+  margin-bottom: 0.05rem;
+}
+
+.resume-role ul {
+  margin: 0.08rem 0 0.12rem 1rem;
+  padding: 0;
+}
+
+.resume-role li {
+  margin-bottom: 0.08rem;
+}
+
+.resume-inline-list {
+  margin: 0;
+}
+
+.keyword-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.65rem;
+}
+
+.keyword-chip {
+  background: #f4ede7;
+  border: 1px solid #ead6c3;
+  border-radius: 999px;
+  padding: 0.28rem 0.58rem;
+  font-size: 0.78rem;
+  color: #6b4b30;
+}
+
+@media (max-width: 1100px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    max-height: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .grid-two,
+  .bullet-row,
+  .button-row {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .resume-page {
+    padding: 0.35in;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .controls,
+  .preview-header,
+  .keyword-chip-list {
+    display: none;
+  }
+
+  .app-shell,
+  .preview-panel {
+    display: block;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    background: #fff;
+    border: 0;
+  }
+
+  .resume-page {
+    box-shadow: none;
+    margin: 0;
+    width: 8.5in;
+    min-height: 11in;
+    padding: 0.45in 0.5in;
+  }
+}
